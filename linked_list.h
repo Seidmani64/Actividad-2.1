@@ -32,10 +32,7 @@ protected:
     Node<T> *head;
 
 public:
-    ~LinkedList()
-    {
-        // to be implemented
-    };
+    ~LinkedList(){};
     LinkedList()
     {
         head = NULL;
@@ -158,6 +155,122 @@ public:
         }
         item = ptr->get_val();
         return 1;
+    };
+
+    //Count method, takes T value as argument and
+    //returns the amount of times it appears in the list
+    //While loop goes through entire list and uses get_val()
+    //to check if the value is equal to the requested value
+    //Complexity of O(n)
+    int count(T searchFor)
+    {
+        int counter = 0;
+        Node<T> *ptr = head;
+        while(ptr != NULL)
+        {
+            if(ptr->get_val() == searchFor)
+                counter++;
+            ptr = ptr->get_next();
+        }
+        return counter;
+    };
+
+    //deleteList method, has no arguments or return value
+    //Using a temporary Node, deletes the head until no values are left
+    //Complexity O(n)
+    void deleteList()
+    {
+        Node<T> *ptr = head;
+
+        while (ptr != NULL)
+        {
+            Node<T> *temp = head;
+            head = head->get_next();
+            delete temp;
+            ptr = ptr->get_next();
+        }
+    };
+
+
+    //sortedInsert method takes a node pointer as an argument and has no return value
+    //assumes linkedlist is in order
+    //compares value of given node with current node
+    //always checks if next is null before anything else
+    //uses insert_item if condition is met, index begins at 1 and has +1 every loop
+    //Complexity of O(n)
+    void sortedInsert(Node<T> *newNode)
+    {
+        Node<T> *ptr = head;
+        int i = 1;
+        while(ptr != NULL)
+        {
+            if((ptr->get_next()==NULL) && newNode->get_val() >= ptr->get_val())
+            {
+                insert_item(newNode->get_val(), i);
+                break;
+            }
+            else if(newNode->get_val() >= ptr->get_val() && newNode->get_val() <= ptr->get_next()->get_val())
+            {
+                insert_item(newNode->get_val(), i);
+                break;
+            }
+            else if(newNode->get_val() <= ptr->get_val())
+            {
+                insert_item(newNode->get_val(), i-1);
+                break;
+            }
+
+            ptr = ptr->get_next();
+            i++;  
+        }
+    };
+
+    //removeDuplicates method has no arguments or return value
+    //while loop runs from first node to penultimate node
+    //if current node is equal to next one, deletes next one
+    //pointer does not move to next one until the current and next values are different
+    //index of 1 is used to delete the next item and not the current
+    //index increases by 1 every time the current and next values are different
+    //complexity of O(n)
+    void removeDuplicates()
+    {
+        Node<T> *ptr = head;
+        int i = 1;
+        while(ptr->get_next() != NULL)
+        {
+            if(ptr->get_val() == ptr->get_next()->get_val())
+                delete_item(i);
+            else
+            {
+                ptr = ptr->get_next();
+                i++;
+            }
+            
+        }
+
+        
+    };
+
+    //reverse method has no arguments or return value
+    //Uses two additional node objects to store previous node and temporary nodes
+    //stores current next node in temporary node object
+    //sets actual current next node to be equal to current previous node
+    //sets previous node to be equal to current node
+    //finally sets current node to be equal to stored temporary node
+    //Complexity O(n)
+    void reverse()
+    {
+        Node<T> *ptr = head;
+        Node<T> *pre = NULL;
+        Node<T> *temp = NULL;
+        while(ptr != NULL)
+        {
+            temp = ptr->get_next();
+            ptr->set_next(pre);
+            pre = ptr;
+            ptr = temp;
+        }
+        head = pre;
     };
 
 };
